@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/baseline_home_black_18"
+            android:title="HOME" />
+
+        <item
+            android:id="@+id/nav_request"
+            android:icon="@drawable/sharp_not_listed_location_black_18"
+            android:title="RICHIESTE" />
+
+        <item
+            android:id="@+id/nav_rides_in_progress"
+            android:icon="@drawable/sharp_transfer_within_a_station_black_18"
+            android:title="PASSAGGI IN ATTESA"/>
+
+        <item
+            android:id="@+id/nav_rides_accepted"
+            android:icon="@drawable/baseline_done_all_black_18"
+            android:title="PASSAGGI CONFERMATI"/>
+
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/sharp_star_black_18"
+            android:title="FEEDBACK" />
+
+        <item
+            android:id="@+id/nav_sign_out"
+            android:icon="@drawable/sharp_exit_to_app_black_18"
+            android:title="SIGN OUT" />
+    </group>
+</menu>

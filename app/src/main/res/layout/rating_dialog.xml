@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp">
+
+    <TextView
+        android:id="@+id/message_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="FEEDBACK"
+        android:textStyle="bold"
+        android:textAppearance="?android:textAppearanceMedium"/>
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/confirm_ratin_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="center"
+        android:textColor="#000000"
+        android:text="CONFERMA"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:background="@color/colorPrimary"/>
+
+</LinearLayout>

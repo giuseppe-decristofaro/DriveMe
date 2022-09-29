@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:layout_centerInParent="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".Activity.RegisterActivity">
+
+    <TextView
+        android:id="@+id/name_register_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Inserisci il tuo nome"/>
+
+    <EditText
+        android:id="@+id/name_register_edit_view"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:inputType="textPersonName"/>
+
+    <TextView
+        android:id="@+id/surname_register_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Inserisci il tuo cognome"/>
+
+    <EditText
+        android:id="@+id/surname_register_edit_view"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:inputType="textPersonName"/>
+
+    <TextView
+        android:id="@+id/email_register_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Inserisci l'email"/>
+
+    <EditText
+        android:id="@+id/email_register_edit_view"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:inputType="textEmailAddress"/>
+
+    <TextView
+        android:id="@+id/password_register_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Inserisci la password"/>
+
+    <EditText
+        android:id="@+id/password_register_edit_view"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:inputType="textPassword"/>
+
+    <TextView
+        android:id="@+id/phone_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="Inserisci il tuo numero di telefono"/>
+
+    <EditText
+        android:id="@+id/phone_edit_view"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:inputType="phone"/>
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:text="REGISTRATI"
+        android:backgroundTint="@color/colorPrimaryDark"/>
+
+
+</LinearLayout>

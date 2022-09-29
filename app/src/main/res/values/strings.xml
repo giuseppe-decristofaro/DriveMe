@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">DriveMe</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="palermo_text">PALERMO</string>
+    <string name="new_york_text">NEW YORK</string>
+    <string name="tokyo_text">TOKYO</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
