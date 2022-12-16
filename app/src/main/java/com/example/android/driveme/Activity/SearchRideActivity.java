@@ -155,10 +155,14 @@ public class SearchRideActivity extends AppCompatActivity implements OnMapReadyC
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userLogged = dataSnapshot.getValue(User.class);
                 Log.e("userLogged", userLogged.getEmail());
-                nameText = (TextView) findViewById(R.id.user_data_text_view);
+
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                nameText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_data_text_view);
                 //nameText.setText("Welcome " + name + " " + surname + "! La tua email è " + email);
                 nameText.setText("Bentornato " + userLogged.getName() + " " + userLogged.getSurname() +
                         "!\n" + userLogged.getEmail());
+
+                userRef.removeEventListener(this);
             }
 
             @Override
@@ -166,6 +170,7 @@ public class SearchRideActivity extends AppCompatActivity implements OnMapReadyC
 
             }
         });
+
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -409,12 +414,14 @@ public class SearchRideActivity extends AppCompatActivity implements OnMapReadyC
         return Radius * c;
     }
 
+
     @Override
     public void onBackPressed() {
         Intent backPage = new Intent(SearchRideActivity.this, UserPageActivity.class);
         finish();
         startActivity(backPage);
     }
+
 
     private boolean isPermissionGranted() {
         if (checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)

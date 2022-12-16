@@ -74,7 +74,7 @@ public class UserPageActivity extends AppCompatActivity{
         //Inizializzo l'utente corrente
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        //Prendo l'UID dell'utente corremte
+        //Prendo l'UID dell'utente corrente
         userID = mUser.getUid();
         Log.d("UserPageActivity", "UID: " + userID);
         //Istanzio un nodo del database. Questo prende l'utente UID dell'utente loggato per poi prelavare i dati personali.
@@ -105,11 +105,14 @@ public class UserPageActivity extends AppCompatActivity{
                 surname = userLogged.getSurname();
                 email = userLogged.getEmail();
 
-                nameText = (TextView) findViewById(R.id.user_data_text_view);
                 //Aggiorno l'interfaccia con i dati dell'utente
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                nameText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_data_text_view);
                 //nameText.setText("Welcome " + name + " " + surname + "! La tua email è " + email);
                 nameText.setText("Bentornato " + userLogged.getName() + " " + userLogged.getSurname() +
                         "!\n" + userLogged.getEmail());
+
+                userRef.removeEventListener(this);
             }
 
             @Override
@@ -117,6 +120,7 @@ public class UserPageActivity extends AppCompatActivity{
 
             }
         });
+
 
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {

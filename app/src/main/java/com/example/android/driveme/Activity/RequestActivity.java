@@ -95,11 +95,15 @@ public class RequestActivity extends AppCompatActivity {
                 Log.e("addValueEventListener", "\nName: " + userLogged.getName() + "\nSurname: " + userLogged.getSurname() +
                         "\nEmail: " + userLogged.getEmail());
 
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                nameText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_data_text_view);
                 //Aggiorno l'interfaccia con i dati dell'utente
-                nameText = (TextView) findViewById(R.id.user_data_text_view);
+                //nameText = (TextView) findViewById(R.id.user_data_text_view);
 
                 nameText.setText("Bentornato " + userLogged.getName() + " " + userLogged.getSurname() +
                         "!\n" + userLogged.getEmail());
+
+                userRef.removeEventListener(this);
             }
 
             @Override

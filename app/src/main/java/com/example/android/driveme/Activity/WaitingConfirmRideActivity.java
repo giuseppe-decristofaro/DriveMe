@@ -98,11 +98,13 @@ public class WaitingConfirmRideActivity extends AppCompatActivity {
                 email = userLogged.getEmail();
 
                 //Aggiorno l'interfaccia con i dati dell'utente
-                //updateUI();
-                nameText = (TextView) findViewById(R.id.user_data_text_view);
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                nameText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.user_data_text_view);
                 //nameText.setText("Welcome " + name + " " + surname + "! La tua email è " + email);
                 nameText.setText("Bentornato " + userLogged.getName() + " " + userLogged.getSurname() +
                         "!\n" + userLogged.getEmail());
+
+                userRef.removeEventListener(this);
             }
 
             @Override
