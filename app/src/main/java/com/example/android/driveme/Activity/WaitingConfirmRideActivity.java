@@ -104,6 +104,7 @@ public class WaitingConfirmRideActivity extends AppCompatActivity {
                 nameText.setText("Bentornato " + userLogged.getName() + " " + userLogged.getSurname() +
                         "!\n" + userLogged.getEmail());
 
+
                 userRef.removeEventListener(this);
             }
 
