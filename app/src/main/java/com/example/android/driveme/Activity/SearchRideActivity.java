@@ -412,8 +412,8 @@ public class SearchRideActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onBackPressed() {
         Intent backPage = new Intent(SearchRideActivity.this, UserPageActivity.class);
-        startActivity(backPage);
         finish();
+        startActivity(backPage);
     }
 
     private boolean isPermissionGranted() {

@@ -235,6 +235,7 @@ public class ProvideRideActivity extends AppCompatActivity implements OnMapReady
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         txtPassengers.setText("" + numPassengers[position]);
+                        numPassengersChosen = position + 1;
                     }
                 });
 

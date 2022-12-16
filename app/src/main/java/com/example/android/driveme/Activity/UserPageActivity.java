@@ -76,19 +76,28 @@ public class UserPageActivity extends AppCompatActivity{
         mUser = mAuth.getCurrentUser();
         //Prendo l'UID dell'utente corremte
         userID = mUser.getUid();
-
+        Log.d("UserPageActivity", "UID: " + userID);
         //Istanzio un nodo del database. Questo prende l'utente UID dell'utente loggato per poi prelavare i dati personali.
         mDatabase = FirebaseDatabase.getInstance();
         userRef = mDatabase.getReference().child("users").child(userID);
-        Log.e("USERPAGE", "UID: " + userID);
+        Log.d("UserPageActivity", "userRef is: " + userRef);
 
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.baseline_list_black_18dp);
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
         //Con questo listener prelevo i dati personali dell'utente dal database per mostrarli a video.
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userLogged = dataSnapshot.getValue(User.class);
-
+                Log.d("UserPageActivity", "userLogged is: " + userLogged);
                 Log.e("addValueEventListener", "\nName: " + userLogged.getName() + "\nSurname: " + userLogged.getSurname() +
                         "\nEmail: " + userLogged.getEmail());
 
@@ -96,10 +105,8 @@ public class UserPageActivity extends AppCompatActivity{
                 surname = userLogged.getSurname();
                 email = userLogged.getEmail();
 
-                //Aggiorno l'interfaccia con i dati dell'utente
-
                 nameText = (TextView) findViewById(R.id.user_data_text_view);
-
+                //Aggiorno l'interfaccia con i dati dell'utente
                 //nameText.setText("Welcome " + name + " " + surname + "! La tua email è " + email);
                 nameText.setText("Bentornato " + userLogged.getName() + " " + userLogged.getSurname() +
                         "!\n" + userLogged.getEmail());
@@ -111,18 +118,6 @@ public class UserPageActivity extends AppCompatActivity{
             }
         });
 
-
-
-
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        ActionBar actionbar = getSupportActionBar();
-        actionbar.setDisplayHomeAsUpEnabled(true);
-        actionbar.setHomeAsUpIndicator(R.drawable.baseline_list_black_18dp);
-
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -212,8 +207,8 @@ public class UserPageActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent searchRideIntent = new Intent(UserPageActivity.this, SearchRideActivity.class);
-                startActivity(searchRideIntent);
                 finish();
+                startActivity(searchRideIntent);
             }
         });
 
@@ -221,8 +216,8 @@ public class UserPageActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Intent provideRide = new Intent(UserPageActivity.this, ProvideRideActivity.class);
-                startActivity(provideRide);
                 finish();
+                startActivity(provideRide);
             }
         });
 

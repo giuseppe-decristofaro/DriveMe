@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.UUID;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -45,9 +48,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //Creo le istanze di autenticazione, database e riferimento a database(questo serve per accedere ai nodi del database)
-        mAuth = FirebaseAuth.getInstance();
-
         mDatabase = FirebaseDatabase.getInstance();
         userRef = mDatabase.getReference().child("users");
 
@@ -73,34 +73,43 @@ public class RegisterActivity extends AppCompatActivity {
                 if(controlloCredenziali(userRegistered.getName(), userRegistered.getSurname(), userRegistered.getEmail(), password,
                                         userRegistered.getPhone())){
 
-                    mUser = mAuth.getCurrentUser();
-                    //Prendo l'UID dell'utente corremte
-                    userID = mUser.getUid();
-                    userRegistered = new User(userID, nameText.getText().toString(), surnameText.getText().toString(),
-                                              emailText.getText().toString(), phoneText.getText().toString(), 0.0);
+                    //Creo le istanze di autenticazione, database e riferimento a database(questo serve per accedere ai nodi del database)
+                    mAuth = FirebaseAuth.getInstance();
+                    Log.d("RegisterActivity", "mAuth is" + mAuth);
 
-                    mAuth.createUserWithEmailAndPassword(userRegistered.getEmail(), password)
-                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        //Registrazione avvenuta con successo.
+                    if(mAuth != null) {
 
-                                        //Il nuovo utente viene inserito nel database .
-                                        userRef.child(userID).setValue(userRegistered);
+                        mAuth.createUserWithEmailAndPassword(userRegistered.getEmail(), password)
+                                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            //Registrazione avvenuta con successo.
 
-                                        //Apro la nuova activity con l'utente già autenticato.
-                                        Intent userPage = new Intent(RegisterActivity.this, UserPageActivity.class);
-                                        startActivity(userPage);
-                                        finish();
+                                            //Prendo l'UID dell'utente corrente
+                                            userID = mAuth.getCurrentUser().getUid();
+                                            Log.d("RegisterActivity", "userID is" + userID);
 
-                                    } else {
-                                        //Se la registrazione fallisce, avviso l'utente
-                                        Toast.makeText(RegisterActivity.this, "Ops! C'è stato un errore! Ti preghiamo di riprovare",
-                                                Toast.LENGTH_SHORT).show();
+                                            userRegistered = new User(userID, nameText.getText().toString(), surnameText.getText().toString(),
+                                                    emailText.getText().toString(), phoneText.getText().toString(), 0.0);
+
+                                            //Il nuovo utente viene inserito nel database .
+                                            userRef.child(userID).setValue(userRegistered);
+
+                                            //Apro la nuova activity con l'utente già autenticato.
+                                            Intent userPage = new Intent(RegisterActivity.this, UserPageActivity.class);
+                                            startActivity(userPage);
+                                            finish();
+
+                                        } else {
+                                            //Se la registrazione fallisce, avviso l'utente
+                                            Toast.makeText(RegisterActivity.this, "Ops! C'è stato un errore! Ti preghiamo di riprovare",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Log.e("RegisterActivity", "onComplete: Failed=" + task.getException().getMessage());
+                                        }
                                     }
-                                }
-                            });
+                                });
+                    }
                 }
             }
         });

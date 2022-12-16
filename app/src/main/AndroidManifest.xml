@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.driveme">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Added for using GoogleMapAPI -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -49,7 +48,7 @@
         <activity android:name=".Activity.SearchRideActivity" />
         <activity android:name=".Activity.RequestActivity" />
         <activity android:name=".Activity.WaitingConfirmRideActivity" />
-        <activity android:name=".Activity.ConfirmedRideActivity"></activity>
+        <activity android:name=".Activity.ConfirmedRideActivity" />
     </application>
 
 </manifest>
