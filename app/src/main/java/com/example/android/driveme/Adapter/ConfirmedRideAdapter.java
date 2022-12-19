@@ -70,12 +70,12 @@ public class ConfirmedRideAdapter extends ArrayAdapter {
 
         CircleImageView imageView = (CircleImageView) convertView.findViewById(R.id.profile_pic_request_item);
 
+
         if(isDriver){
             boolean driverHasPhoto = requestRide.getRide().getRider().getPhotoUrl()!= null;
             if (driverHasPhoto) {
                 imageView.setVisibility(View.VISIBLE);
                 Glide.with(imageView.getContext())
-                        .using(new FirebaseImageLoader())
                         .load(picStorage)
                         .into(imageView);
             } else {
@@ -87,7 +87,6 @@ public class ConfirmedRideAdapter extends ArrayAdapter {
             if (passengerHasPhoto) {
                 imageView.setVisibility(View.VISIBLE);
                 Glide.with(imageView.getContext())
-                        .using(new FirebaseImageLoader())
                         .load(picStorage)
                         .into(imageView);
             } else {

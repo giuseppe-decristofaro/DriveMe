@@ -66,7 +66,6 @@ public class RequestAdapter extends ArrayAdapter<RequestRide>{
         if (passengerHasPhoto) {
             imageView.setVisibility(View.VISIBLE);
             Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
                     .load(picStorage)
                     .into(imageView);
         } else {

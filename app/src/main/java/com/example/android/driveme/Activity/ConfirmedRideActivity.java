@@ -6,10 +6,14 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
@@ -40,10 +44,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -191,15 +198,34 @@ public class ConfirmedRideActivity extends AppCompatActivity {
                     }
                 });
 
-        //Istanza di FirebaseStorage
-        mFirebaseStorage = FirebaseStorage.getInstance();
-        picStorage = mFirebaseStorage.getReference().child("users_pic/").child(userID);
         profilePic = (CircleImageView) navigationView.getHeaderView(0).findViewById(R.id.profile_pic);
 
-        Glide.with(getApplicationContext())
-                .using(new FirebaseImageLoader())
-                .load(picStorage)
-                .into(profilePic);
+        //Istanza di FirebaseStorage
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        picStorage = mFirebaseStorage.getReference().child("users_pic");
+
+
+        try {
+            File localFile = File.createTempFile("temp", ".jpg");
+
+            picStorage.child("DEFAULT_PROFILE_PIC.jpg").getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    profilePic.setImageBitmap(bitmap);
+                }
+            });
+
+            picStorage.child(userID).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    profilePic.setImageBitmap(bitmap);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override

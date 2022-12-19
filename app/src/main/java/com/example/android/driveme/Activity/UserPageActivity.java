@@ -1,10 +1,13 @@
 package com.example.android.driveme.Activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -30,9 +33,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -139,23 +147,23 @@ public class UserPageActivity extends AppCompatActivity{
 
                         // Add code here to update the UI based on the item selected
                         // For example, swap UI fragments herea
-                        switch(menuItem.getItemId()){
+                        switch (menuItem.getItemId()) {
 
-                            case R.id.nav_home:{
+                            case R.id.nav_home: {
                                 Intent homePage = new Intent(UserPageActivity.this, UserPageActivity.class);
                                 startActivity(homePage);
                                 finish();
                                 break;
                             }
 
-                            case R.id.nav_request:{
+                            case R.id.nav_request: {
                                 Intent requestPage = new Intent(UserPageActivity.this, RequestActivity.class);
                                 startActivity(requestPage);
                                 finish();
                                 break;
                             }
 
-                            case R.id.nav_sign_out:{
+                            case R.id.nav_sign_out: {
                                 FirebaseAuth.getInstance().signOut();
                                 Intent mainPage = new Intent(UserPageActivity.this, MainActivity.class);
                                 startActivity(mainPage);
@@ -163,14 +171,14 @@ public class UserPageActivity extends AppCompatActivity{
                                 break;
                             }
 
-                            case R.id.nav_rides_in_progress:{
+                            case R.id.nav_rides_in_progress: {
                                 Intent ridesPage = new Intent(UserPageActivity.this, WaitingConfirmRideActivity.class);
                                 startActivity(ridesPage);
                                 finish();
                                 break;
                             }
 
-                            case R.id.nav_rides_accepted:{
+                            case R.id.nav_rides_accepted: {
                                 Intent acceptedRidesPage = new Intent(UserPageActivity.this, ConfirmedRideActivity.class);
                                 startActivity(acceptedRidesPage);
                                 finish();
@@ -186,12 +194,31 @@ public class UserPageActivity extends AppCompatActivity{
 
         //Istanza di FirebaseStorage
         mFirebaseStorage = FirebaseStorage.getInstance();
-        picStorage = mFirebaseStorage.getReference().child("users_pic/").child(userID);
+        picStorage = mFirebaseStorage.getReference().child("users_pic");
 
-        Glide.with(getApplicationContext())
-                .using(new FirebaseImageLoader())
-                .load(picStorage)
-                .into(profilePic);
+
+        try {
+            File localFile = File.createTempFile("temp", ".jpg");
+
+            picStorage.child("DEFAULT_PROFILE_PIC.jpg").getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    profilePic.setImageBitmap(bitmap);
+                }
+            });
+
+            picStorage.child(userID).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    profilePic.setImageBitmap(bitmap);
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
 
         profilePic.setOnClickListener(new View.OnClickListener() {
@@ -229,6 +256,7 @@ public class UserPageActivity extends AppCompatActivity{
 
     /**
      * In base all'oggetto cliccato dall'utente nel Menu, esegue un'azione diversa
+     *
      * @param item
      * @return
      */
@@ -236,7 +264,7 @@ public class UserPageActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
-            case android.R.id.home:{
+            case android.R.id.home: {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
             }
@@ -248,7 +276,7 @@ public class UserPageActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK){
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
 
             final Uri selectedImageUri = data.getData();
             picStorage.child(selectedImageUri.getLastPathSegment());

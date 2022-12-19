@@ -62,7 +62,6 @@ public class WaitingConfirmRideAdapter extends ArrayAdapter {
         boolean driverHasPhoto = requestRide.getRide().getRider().getPhotoUrl()!= null;
         if (driverHasPhoto) {
             Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
                     .load(picStorage)
                     .into(imageView);
             imageView.setVisibility(View.VISIBLE);

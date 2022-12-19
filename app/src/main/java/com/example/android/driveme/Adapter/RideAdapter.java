@@ -62,7 +62,6 @@ public class RideAdapter extends ArrayAdapter<Ride> {
         if (driverHasPhoto) {
             imageView.setVisibility(View.VISIBLE);
             Glide.with(imageView.getContext())
-                    .using(new FirebaseImageLoader())
                     .load(picStorage)
                     .into(imageView);
         } else {
