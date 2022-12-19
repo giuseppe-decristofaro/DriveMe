@@ -2,6 +2,8 @@ package com.example.android.driveme.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,9 +14,13 @@ import com.bumptech.glide.Glide;
 import com.example.android.driveme.R;
 import com.example.android.driveme.Utility.RequestRide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -25,11 +31,11 @@ public class ConfirmedRideAdapter extends ArrayAdapter {
     private FirebaseStorage mFirebaseStorage;
     private StorageReference picStorage;
 
-    public ConfirmedRideAdapter(Context context, int resource, List<RequestRide> requestRides){
+    public ConfirmedRideAdapter(Context context, int resource, List<RequestRide> requestRides) {
         super(context, resource, requestRides);
     }
 
-    public ConfirmedRideAdapter(Context context, int resource, List<RequestRide> requestRides, boolean isDriver){
+    public ConfirmedRideAdapter(Context context, int resource, List<RequestRide> requestRides, boolean isDriver) {
         super(context, resource, requestRides);
         this.isDriver = isDriver;
     }
@@ -46,21 +52,19 @@ public class ConfirmedRideAdapter extends ArrayAdapter {
         //Istanza di FirebaseStorage
         mFirebaseStorage = FirebaseStorage.getInstance();
 
-        if(!isDriver){
+        if (!isDriver) {
             picStorage = mFirebaseStorage.getReference().child("users_pic/").child(requestRide.getRide().getRider().getUID());
-        }
-        else{
+        } else {
             picStorage = mFirebaseStorage.getReference().child("users_pic/").child(requestRide.getPassenger().getUID());
         }
 
         TextView passengerName = (TextView) convertView.findViewById(R.id.passenger_name_text_view);
         TextView passengerPoints = (TextView) convertView.findViewById(R.id.points_passenger_text_view);
 
-        if(!isDriver){
+        if (!isDriver) {
             passengerName.setText("Conducente: " + requestRide.getRide().getRider().getName() + " " + requestRide.getRide().getRider().getSurname());
             passengerPoints.setText("Punti: " + requestRide.getRide().getRider().getPoints());
-        }
-        else{
+        } else {
             passengerName.setText("Passeggero: " + requestRide.getPassenger().getName() + " " + requestRide.getPassenger().getSurname());
             passengerPoints.setText("Punti: " + requestRide.getPassenger().getPoints());
         }
@@ -70,29 +74,68 @@ public class ConfirmedRideAdapter extends ArrayAdapter {
 
         CircleImageView imageView = (CircleImageView) convertView.findViewById(R.id.profile_pic_request_item);
 
+        //Istanza di FirebaseStorage
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        picStorage = mFirebaseStorage.getReference().child("users_pic");
 
-        if(isDriver){
-            boolean driverHasPhoto = requestRide.getRide().getRider().getPhotoUrl()!= null;
-            if (driverHasPhoto) {
-                imageView.setVisibility(View.VISIBLE);
-                Glide.with(imageView.getContext())
-                        .load(picStorage)
-                        .into(imageView);
+        try {
+            File localFile = File.createTempFile("temp", ".jpg");
+
+            if (isDriver) {
+                boolean driverHasPhoto = requestRide.getRide().getRider().getPhotoUrl() != null;
+
+                if (driverHasPhoto) {
+
+                    picStorage.child("DEFAULT_PROFILE_PIC.jpg").getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+
+                    picStorage.child(requestRide.getRide().getRider().getUID()).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+
+                    imageView.setVisibility(View.VISIBLE);
+                } else {
+                    imageView.setVisibility(View.GONE);
+                }
             } else {
-                imageView.setVisibility(View.GONE);
+                boolean passengerHasPhoto = requestRide.getPassenger().getPhotoUrl() != null;
+                if (passengerHasPhoto) {
+
+                    picStorage.child("DEFAULT_PROFILE_PIC.jpg").getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+
+                    picStorage.child(requestRide.getPassenger().getUID()).getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                            imageView.setImageBitmap(bitmap);
+                        }
+                    });
+
+                    imageView.setVisibility(View.VISIBLE);
+                } else {
+                    imageView.setVisibility(View.GONE);
+                }
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else{
-            boolean passengerHasPhoto = requestRide.getPassenger().getPhotoUrl()!= null;
-            if (passengerHasPhoto) {
-                imageView.setVisibility(View.VISIBLE);
-                Glide.with(imageView.getContext())
-                        .load(picStorage)
-                        .into(imageView);
-            } else {
-                imageView.setVisibility(View.GONE);
-            }
-        }
+
 
         TextView hourRide = (TextView) convertView.findViewById(R.id.ride_hour_request);
         hourRide.setText("Orario: " + requestRide.getRide().getHour() + ":" + requestRide.getRide().getMinute());
